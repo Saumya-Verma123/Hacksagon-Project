@@ -1,2 +1,0 @@
-# Hacksagon-Project
-RecycLens AI
