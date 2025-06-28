@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import './Home.css';
-
 import Navbar from './Navbar';
 import History from './History';
 import ScanWaste from './ScanWaste';
 import Result from './Result';
-
 import Group48 from '../assets/Group48.svg';
 import Group3 from '../assets/Group3.svg';
-import RecycleLogo from '../assets/react.svg';
+
 
 function App() {
   const [selectedMenu, setSelectedMenu] = useState('Home');
@@ -20,12 +18,12 @@ function App() {
 
       {selectedMenu === 'History' ? (
         <History />
-     
+
       ) : selectedMenu === 'Scan Waste' ? (
         <ScanWaste onResult={setScanResult} />
       ) : selectedMenu === 'Result' ? (
         <Result result={scanResult} />
-     
+
       ) : (
         <div className="landing-page">
           {/* Background Image */}
@@ -35,9 +33,10 @@ function App() {
 
           {/* Header */}
           <header className="header">
-            <img src={RecycleLogo} alt="Recycle Logo" className="logo" />
+            <div className='size-16'>
+              <img src={img.logo} alt="Recycle Logo" className="logo" /></div>
             <span className="brand-name">RECYCLENS</span>
-          </header>
+          </header>+
 
           {/* Hero Section */}
           <main className="main-content">
