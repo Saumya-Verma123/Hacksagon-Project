@@ -1,0 +1,5 @@
+.env
+venv/
+controllers/chatbot_controller.py
+routes/chatbot_routes.py
+services/chatbot_service.py
