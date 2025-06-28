@@ -44,8 +44,6 @@ def get_gemini_insights():
         }
 
         result = mongo.db.insights.insert_one(insights_doc)
-
-        # Step 4: Fetch the inserted document (using the inserted ID)
         stored_doc = mongo.db.insights.find_one({"_id": result.inserted_id})
 
         return jsonify({"insights": stored_doc["insights"]}), 200
