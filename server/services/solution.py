@@ -1,54 +1,28 @@
-from flask import Blueprint, jsonify, request
-import traceback
-from extensions.db import mongo 
-from datetime import datetime
+from google import genai
+import os
 
-from services.solution import (
-    get_recyclability_score,
-    get_fun_fact,
-    get_recycling_importance,
-)
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-gemini_bp = Blueprint("gemini", __name__)
+def get_material_type(material):
+    prompt = f"What type of material are {material} usually made of? Provide the answer in one short sentence."
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+    )
+    return response.text.strip()
 
-@gemini_bp.route("/api/gemini-insights", methods=["POST"])
-def get_gemini_insights():
-    data = request.get_json()
-    detected_objects = data.get("detected_objects")
+def get_material_recyclability(material):
+    prompt = f"Explain the recyclability of {material} items in simple language in under 7 lines. Mention if it needs to be clean or dry."
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+    )
+    return response.text.strip()
 
-    if not detected_objects:
-        return jsonify({"error": "No detected objects provided"}), 400
-
-    try:
-        # Extract unique classes
-        materials = list({obj['class'] for obj in detected_objects})
-
-        insights = []
-
-        for material in materials:
-            score = get_recyclability_score(material)
-            fact = get_fun_fact(material)
-            importance = get_recycling_importance(material)
-
-            insights.append({
-                "material": material,
-                "recyclability_score": score,
-                "fun_fact": fact,
-                "recycling_importance": importance
-            })
-        
-        insights_doc = {
-            "detected_objects": detected_objects,
-            "insights": insights,
-            "timestamp": datetime.utcnow()
-        }
-
-        result = mongo.db.insights.insert_one(insights_doc)
-        stored_doc = mongo.db.insights.find_one({"_id": result.inserted_id})
-
-        return jsonify({"insights": stored_doc["insights"]}), 200
-
-    except Exception as e:
-        print("Error in /api/gemini-insights route:")
-        traceback.print_exc()  
-        return jsonify({"error": str(e)}), 500
+def get_material_fun_fact(material):
+    prompt = f"Give a single interesting 'Did you know?' style fun fact about {material} in one sentence."
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+    )
+    return response.text.strip()

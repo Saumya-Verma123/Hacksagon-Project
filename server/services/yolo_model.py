@@ -4,7 +4,8 @@ import os
 import shutil
 
 
-model = YOLO("model/best.pt")
+
+model = YOLO("server/model/best.pt")
 
 def run_inference(image_path, output_dir="static/predictions", annotation_dir="static/annotations"):
     

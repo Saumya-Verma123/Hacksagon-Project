@@ -2,7 +2,7 @@ import base64
 import uuid
 import os
 from flask import jsonify
-from server.model.yolov8_model import run_inference
+from services.yolo_model import run_inference
 from extensions.db import mongo
 
 def handle_image_upload(data):
